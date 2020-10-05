@@ -20,6 +20,12 @@ event_dispatchers = database
 
 {% if 'ceilometer_agent_central' in group_names %}
 polling_namespaces = central
+{% if ceilometer_coordination_enabled | bool %}
+[coordination]
+backend_url="{{ ceilometer_coordination_url }}"
+{% endif %}
+{% elif 'ceilometer_agent_compute' in group_names %}
+polling_namespaces = compute
 {% endif %}
 
 [oslo_messaging_rabbit]
@@ -31,6 +37,10 @@ gnocchi_is_enabled = {{ ceilometer_gnocchi_enabled | bool }}
 [notification]
 workers = {{ ceilometer_notification_workers }}
 store_events = {{ not ceilometer_gnocchi_enabled | bool }}
+workload_partitioning = {{ ceilometer_notification_partitioning_enabled | bool}}
+batch_timeout = {{ ceilometer_notification_batch_timeout }}
+batch_size = {{ ceilometer_notification_batch_size }}
+
 
 # Notification queues to listen on
 

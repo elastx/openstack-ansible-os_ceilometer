@@ -91,6 +91,15 @@ ceilometer_service_in_ldap: false
 # Cap the maximum number of threads / workers when a user value is unspecified
 ceilometer_notification_workers_max: 16
 ceilometer_notification_workers: "{{ [[ansible_processor_vcpus|default(2) // 2, 1] | max, ceilometer_notification_workers_max] | min }}"
+ceilometer_notification_partitioning_enabled: false
+ceilometer_notification_batch_timeout: 1
+ceilometer_notification_batch_size: 400
+
+# Redis is configured outside of OSA
+ceilometer_coordination_enabled: false
+ceilometer_coordination_proto: redis
+ceilometer_coordination_host: localhost
+ceilometer_coordination_url: "{{ ceilometer_coordination_proto }}://:{{ ceilometer_redis_password }}@{{ ceilometer_coordination_host }} "
 
 # Enable/Disable Ceilometer per service
 glance_ceilometer_enabled: false
